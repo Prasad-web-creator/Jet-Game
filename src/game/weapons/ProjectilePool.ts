@@ -166,6 +166,14 @@ export class ProjectilePool {
             hitPosition: { x: p.position.x, y: p.position.y, z: p.position.z },
           });
 
+          import('../core/EventBus').then(({ globalEventBus }) => {
+            globalEventBus.emit('BULLET_HIT', {
+              position: p.position.clone(),
+              targetId: target.id,
+              damage: p.damage,
+            });
+          });
+
           onHitCb?.(this._scratchHitPos);
           this._recycle(i);
           hit = true;

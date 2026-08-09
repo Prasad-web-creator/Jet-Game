@@ -12,6 +12,7 @@ export type GameEventMap = {
 
   // ── Weapons ────────────────────────────────────────────────────────────────
   MACHINE_GUN_FIRED:  { origin: Vector3; direction: Vector3 };
+  BULLET_HIT:         { position: Vector3; targetId: string; damage: number };
   MISSILE_LAUNCHED:   { origin: Vector3; targetId: string | null };
   MISSILE_HIT:        { position: Vector3; targetId: string | null; damage: number };
 

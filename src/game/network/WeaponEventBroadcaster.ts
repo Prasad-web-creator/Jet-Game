@@ -25,12 +25,23 @@ export class WeaponEventBroadcaster {
 
     // When a missile hits a target in the world, report to network
     globalEventBus.on('MISSILE_HIT', this._onMissileHit);
+    
+    // When a machine gun bullet hits a target
+    globalEventBus.on('BULLET_HIT', this._onBulletHit);
 
     // When a target is destroyed by the local player, publish kill
     globalEventBus.on('TARGET_DESTROYED', this._onTargetDestroyed);
   }
 
   private _onMissileHit = (payload: { position: { x: number; y: number; z: number }; targetId: string | null; damage: number }): void => {
+    this._publishHit('missile_hit', payload);
+  };
+
+  private _onBulletHit = (payload: { position: { x: number; y: number; z: number }; targetId: string | null; damage: number }): void => {
+    this._publishHit('bullet_hit', payload);
+  };
+
+  private _publishHit(type: 'missile_hit' | 'bullet_hit', payload: { position: { x: number; y: number; z: number }; targetId: string | null; damage: number }): void {
     if (!payload.targetId) return;
     const nm = this._networkManager;
 
@@ -39,7 +50,7 @@ export class WeaponEventBroadcaster {
     if (!remoteUids.includes(payload.targetId)) return;
 
     const event: Omit<HitEvent, 'confirmed'> = {
-      type:      'missile_hit',
+      type,
       ts:        Date.now(),
       sourceUid: nm.getLocalUid(),
       targetUid: payload.targetId,
@@ -47,7 +58,7 @@ export class WeaponEventBroadcaster {
       pos:       payload.position as { x: number; y: number; z: number },
     };
     nm.publishHitEvent(event);
-  };
+  }
 
   private _onTargetDestroyed = (payload: { targetId: string }): void => {
     const remoteUids = this._networkManager.getRemoteUids();
@@ -63,6 +74,7 @@ export class WeaponEventBroadcaster {
     if (!this._bound) return;
     this._bound = false;
     globalEventBus.off('MISSILE_HIT',       this._onMissileHit);
+    globalEventBus.off('BULLET_HIT',        this._onBulletHit);
     globalEventBus.off('TARGET_DESTROYED',  this._onTargetDestroyed);
   }
 }
