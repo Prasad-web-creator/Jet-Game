@@ -90,9 +90,10 @@ export class WeaponManager implements GameSystem {
 
     // 2. Read Input & Fire
     const snap = this.inputManager.getSnapshot();
+    const isDestroyed = this.aircraftController.isDestroyed?.() ?? false;
 
     // Machine Gun
-    if (snap.fireGun) {
+    if (snap.fireGun && !isDestroyed) {
       const fired = this.machineGun.fire(origin, direction, craftVel);
       if (fired) {
         this.cameraManager?.shake(0.06, 0.04);
@@ -104,7 +105,7 @@ export class WeaponManager implements GameSystem {
     }
 
     // Missile Launch (Right Click / MSL touch button)
-    if (snap.fireMissile && this.missileWeapon) {
+    if (snap.fireMissile && this.missileWeapon && !isDestroyed) {
       const target = this.targetManager.getSelectedTarget();
       this.missileWeapon.fireWithTarget(origin, direction, craftVel, target);
     }

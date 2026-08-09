@@ -155,9 +155,16 @@ export class AircraftController implements GameSystem {
     this._onStateUpdate?.({ playerAircraft: this._aircraft });
   }
 
+  isDestroyed(): boolean {
+    return this._aircraft.isDestroyed;
+  }
+
   private destroyPlayer(): void {
     if (this._aircraft.isDestroyed) return;
-    this._aircraft.isDestroyed = true;
+    this._aircraft = {
+      ...this._aircraft,
+      isDestroyed: true
+    };
     
     console.log('[AircraftController] PLAYER DESTROYED!');
     globalEventBus.emit('PLAYER_DESTROYED', { position: new Vector3(this._aircraft.position.x, this._aircraft.position.y, this._aircraft.position.z) });
@@ -291,10 +298,12 @@ export class AircraftController implements GameSystem {
   }
 
   isGunFiring(): boolean {
+    if (this._aircraft.isDestroyed) return false;
     return this._inputManager.getSnapshot().fireGun;
   }
 
   isMissileFiring(): boolean {
+    if (this._aircraft.isDestroyed) return false;
     return this._inputManager.getSnapshot().fireMissile;
   }
 
