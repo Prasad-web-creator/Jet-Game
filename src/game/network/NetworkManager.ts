@@ -24,7 +24,8 @@ import {
   type DatabaseReference,
   type Unsubscribe,
 } from 'firebase/database';
-import { rtdb } from '../../firebase/firebaseApp';
+import { collection, doc, onSnapshot, setDoc, deleteDoc } from 'firebase/firestore';
+import { rtdb, db } from '../../firebase/firebaseApp';
 import { StateInterpolator } from './StateInterpolator';
 import { globalEventBus } from '../core/EventBus';
 import type { GameSystem } from '../core/GameLoop';
@@ -58,13 +59,14 @@ export class NetworkManager implements GameSystem {
   // ── Timer ──────────────────────────────────────────────────────────────────
   private _broadcastTimer = 0;
 
-  // ── RTDB refs ──────────────────────────────────────────────────────────────
-  private _playersRef:   DatabaseReference | null = null;
-  private _eventsRef:    DatabaseReference | null = null;
-  private _scoreRef:     DatabaseReference | null = null;
-  private _unsubPlayers: Unsubscribe | null = null;
-  private _unsubEvents:  Unsubscribe | null = null;
-  private _unsubScore:   Unsubscribe | null = null;
+  // ── Network refs ───────────────────────────────────────────────────────────
+  private _playersRef:         DatabaseReference | null = null;
+  private _eventsRef:          DatabaseReference | null = null;
+  private _scoreRef:           DatabaseReference | null = null;
+  private _unsubPlayers:       Unsubscribe | null = null;
+  private _unsubEvents:        Unsubscribe | null = null;
+  private _unsubScore:         Unsubscribe | null = null;
+  private _unsubFirestoreLive: (() => void) | null = null;
 
   constructor(matchId: string, localUid: string, callsign: string) {
     this._matchId  = matchId;
@@ -84,7 +86,7 @@ export class NetworkManager implements GameSystem {
     this._eventsRef  = rtdbRef(rtdb, `${base}/events`);
     this._scoreRef   = rtdbRef(rtdb, `${base}/scoreboard`);
 
-    // Subscribe to remote players
+    // Subscribe to remote players via RTDB (WebSocket channel)
     this._unsubPlayers = onValue(this._playersRef, (snap) => {
       const data = snap.val() as Record<string, PlayerNetState> | null;
       if (!data) return;
@@ -93,6 +95,24 @@ export class NetworkManager implements GameSystem {
         this._interpolator.push(uid, state);
         this._remoteStates.set(uid, state);
       }
+    });
+
+    // Dual-channel Firestore live listener fallback (guarantees sync even if RTDB is blocked/unconfigured)
+    const livePlayersCol = collection(db, 'matches', this._matchId, 'live_players');
+    this._unsubFirestoreLive = onSnapshot(livePlayersCol, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        const state = change.doc.data() as PlayerNetState;
+        if (change.type === 'removed') {
+          if (state?.uid && state.uid !== this._localUid) {
+            this._remoteStates.delete(state.uid);
+          }
+        } else if (state && state.uid && state.uid !== this._localUid) {
+          this._interpolator.push(state.uid, state);
+          this._remoteStates.set(state.uid, state);
+        }
+      });
+    }, (err) => {
+      console.warn('[NetworkManager] Firestore live sync notice:', err);
     });
 
     // Subscribe to incoming hit events (only care about events targeting us)
@@ -158,6 +178,10 @@ export class NetworkManager implements GameSystem {
 
     rtdbSet(rtdbRef(rtdb, `matches/${this._matchId}/players/${this._localUid}`), snap)
       .catch(() => {});
+
+    // Sync to Firestore live_players fallback channel
+    const fsDocRef = doc(db, 'matches', this._matchId, 'live_players', this._localUid);
+    setDoc(fsDocRef, snap).catch(() => {});
   }
 
   // ─── Hit event publishing ────────────────────────────────────────────────────
@@ -219,6 +243,13 @@ export class NetworkManager implements GameSystem {
   // ─── Lifecycle ───────────────────────────────────────────────────────────────
 
   dispose(): void {
+    if (this._unsubFirestoreLive) {
+      this._unsubFirestoreLive();
+      this._unsubFirestoreLive = null;
+    }
+    const fsDocRef = doc(db, 'matches', this._matchId, 'live_players', this._localUid);
+    deleteDoc(fsDocRef).catch(() => {});
+
     // Detach RTDB listeners
     if (this._playersRef && this._unsubPlayers) {
       off(this._playersRef);

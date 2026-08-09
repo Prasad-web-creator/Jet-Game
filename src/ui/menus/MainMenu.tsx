@@ -13,12 +13,13 @@ import type { PlayerProfile } from '../../firebase/multiplayer/networkTypes';
 interface MainMenuProps {
   onStartGame:    (missionId?: string) => void;
   onMultiplayer?: () => void;
+  onSignOut?:     () => void;
   profile?:       PlayerProfile | null;
 }
 
 type MenuTab = 'none' | 'missions' | 'aircraft' | 'upgrades' | 'profile' | 'settings';
 
-function MainMenu({ onStartGame, onMultiplayer, profile }: MainMenuProps) {
+function MainMenu({ onStartGame, onMultiplayer, onSignOut, profile }: MainMenuProps) {
   const [activeTab, setActiveTab] = useState<MenuTab>('none');
   const [saveData, setSaveData] = useState<PlayerSaveData | null>(null);
 
@@ -43,6 +44,26 @@ function MainMenu({ onStartGame, onMultiplayer, profile }: MainMenuProps) {
             <span className="player-credits">
               💰 {(profile?.credits ?? saveData?.player.credits ?? 0).toLocaleString()} CREDITS
             </span>
+            {onSignOut && (
+              <button
+                className="logout-mini-btn"
+                style={{
+                  background: 'rgba(255, 68, 68, 0.15)',
+                  border: '1px solid rgba(255, 68, 68, 0.5)',
+                  color: '#ff6666',
+                  borderRadius: 4,
+                  padding: '2px 8px',
+                  fontFamily: 'inherit',
+                  fontSize: 10,
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  marginLeft: 8,
+                }}
+                onClick={onSignOut}
+              >
+                LOG OUT 🚪
+              </button>
+            )}
           </div>
         )}
 
@@ -99,6 +120,17 @@ function MainMenu({ onStartGame, onMultiplayer, profile }: MainMenuProps) {
           >
             SETTINGS
           </button>
+
+          {onSignOut && (
+            <button
+              id="btn-logout"
+              className="menu-button"
+              style={{ borderColor: 'rgba(255, 68, 68, 0.4)', color: '#ff4444' }}
+              onClick={onSignOut}
+            >
+              🚪 LOG OUT
+            </button>
+          )}
         </nav>
 
         <p className="menu-version">v0.1.0 — Combat & Progression Architecture</p>

@@ -5,7 +5,7 @@ import { MultiplayerGamePage } from '../pages/MultiplayerGamePage';
 import { AuthScreen } from '../ui/screens/AuthScreen';
 import { MultiplayerMenuScreen } from '../ui/screens/MultiplayerMenuScreen';
 import { LobbyScreen } from '../ui/screens/LobbyScreen';
-import { onAuthChanged, type User } from '../firebase/auth/AuthService';
+import { onAuthChanged, signOut, type User } from '../firebase/auth/AuthService';
 import { getProfile, createProfile } from '../firebase/profile/PlayerProfileService';
 import type { PlayerProfile } from '../firebase/multiplayer/networkTypes';
 
@@ -93,6 +93,14 @@ function App() {
     setMatchId(null);
   }, []);
 
+  const handleSignOut = useCallback(async () => {
+    await signOut();
+    setProfile(null);
+    setLobbyId(null);
+    setMatchId(null);
+    setScreen('auth');
+  }, []);
+
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <div id="app-root">
@@ -104,6 +112,7 @@ function App() {
         <MainMenu
           onStartGame={handleStartGame}
           onMultiplayer={handleMultiplayer}
+          onSignOut={handleSignOut}
           profile={profile}
         />
       )}
