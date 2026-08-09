@@ -19,9 +19,10 @@ import type { EngineStatus } from '../game/core/GameEngine';
 
 export interface GameCanvasProps {
   onEngineReady?: (engine: GameEngine) => void;
+  spawnSlotIndex?: number;
 }
 
-function GameCanvas({ onEngineReady }: GameCanvasProps) {
+function GameCanvas({ onEngineReady, spawnSlotIndex = 0 }: GameCanvasProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef  = useRef<HTMLCanvasElement>(null);
   const engineRef  = useRef<GameEngine | null>(null);
@@ -42,12 +43,12 @@ function GameCanvas({ onEngineReady }: GameCanvasProps) {
     // Track status changes for the loading overlay
     engine.onStatusChange((status) => setEngineStatus(status));
 
-    engine.initialize(canvasRef.current);
+    engine.initialize(canvasRef.current, spawnSlotIndex);
     engine.start();
     engineRef.current = engine;
 
     onEngineReady?.(engine);
-  }, [onEngineReady]);
+  }, [onEngineReady, spawnSlotIndex]);
 
   const disposeEngine = useCallback(() => {
     engineRef.current?.dispose();

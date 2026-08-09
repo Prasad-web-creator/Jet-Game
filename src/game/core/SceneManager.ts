@@ -84,7 +84,7 @@ export class SceneManager {
 
   // ─── Scene Creation ───────────────────────────────────────────────────────
 
-  createScene(): Scene {
+  createScene(spawnSlotIndex = 0): Scene {
     this._scene = new Scene(this.engine);
 
     // ── Babylon.js scene settings ──────────────────────────────────────────
@@ -106,6 +106,7 @@ export class SceneManager {
 
     // 3. Aircraft
     this.aircraftController = new AircraftController(this.inputManager);
+    this.aircraftController.setSpawnSlotIndex(spawnSlotIndex);
     this.aircraftController.initialize(this._scene);
 
     // 4. Camera

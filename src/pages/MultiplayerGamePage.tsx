@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import GameCanvas from '../components/GameCanvas';
 import HUD from '../ui/hud/HUD';
 import { TouchControls } from '../ui/mobile';
@@ -193,12 +193,21 @@ export function MultiplayerGamePage({
     : null;
   const spectatingCallsign = spectatingScore?.callsign ?? spectatingUid?.substring(0, 6) ?? '';
 
+  // Calculate deterministic spawn slot from UID hash (0-15)
+  const spawnSlotIndex = useMemo(() => {
+    let hash = 0;
+    for (let i = 0; i < profile.uid.length; i++) {
+      hash = (hash << 5) - hash + profile.uid.charCodeAt(i);
+    }
+    return Math.abs(hash) % 16;
+  }, [profile.uid]);
+
   return (
     <div
       id="multiplayer-game-page"
       style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden', background: '#040814' }}
     >
-      <GameCanvas onEngineReady={handleEngineReady} />
+      <GameCanvas onEngineReady={handleEngineReady} spawnSlotIndex={spawnSlotIndex} />
 
       {gameState?.phase === GamePhase.Playing && (
         <>

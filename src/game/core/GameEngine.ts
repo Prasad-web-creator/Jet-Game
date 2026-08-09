@@ -113,7 +113,7 @@ export class GameEngine {
    *
    * @param canvas - The HTMLCanvasElement to render into
    */
-  initialize(canvas: HTMLCanvasElement): void {
+  initialize(canvas: HTMLCanvasElement, spawnSlotIndex = 0): void {
     if (this.engine) {
       console.warn('[GameEngine] Already initialized — call dispose() first.');
       return;
@@ -141,7 +141,7 @@ export class GameEngine {
       }
 
       this.sceneManager = new SceneManager(this.engine);
-      this.sceneManager.createScene();
+      this.sceneManager.createScene(spawnSlotIndex);
 
       this.gameLoop = new GameLoop();
       // Wire world systems (WorldManager, AircraftController) into the game loop
