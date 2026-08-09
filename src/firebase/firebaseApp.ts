@@ -19,7 +19,7 @@ const firebaseConfig = {
   appId:             '1:120703870300:web:86f20cc877fef1f9a08d99',
   measurementId:     'G-XS9KN25KD4',
   // Realtime Database URL — enable RTDB in Firebase console first.
-  databaseURL:       'https://jetgame-8609c-default-rtdb.firebaseio.com',
+  databaseURL:       'https://jetgame-8609c-default-rtdb.asia-southeast1.firebasedatabase.app/',
 };
 
 // Guard against hot-module-reload double-init in Vite dev mode.
