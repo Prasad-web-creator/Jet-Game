@@ -190,12 +190,16 @@ export class TargetManager implements GameSystem {
     distance: number | undefined;
     lockProgress: number;
     screenPos: { x: number; y: number; isBehind: boolean } | undefined;
+    health: number | undefined;
+    maxHealth: number | undefined;
   } = {
     lockState: LockState.None,
     targetName: null,
     distance: undefined,
     lockProgress: 0,
     screenPos: undefined,
+    health: undefined,
+    maxHealth: undefined,
   };
 
   // PERF: cached distance — computed once per frame, reused for payload & state
@@ -259,6 +263,8 @@ export class TargetManager implements GameSystem {
     this._hudTargetPayload.distance     = this._cachedDistance;
     this._hudTargetPayload.lockProgress = this.lockProgress;
     this._hudTargetPayload.screenPos    = this.selectedTarget ? this._scratchScreenPos : undefined;
+    this._hudTargetPayload.health       = this.selectedTarget?.health;
+    this._hudTargetPayload.maxHealth    = this.selectedTarget?.maxHealth;
     globalEventBus.emit('HUD_TARGET_UPDATE', this._hudTargetPayload);
 
     state.lockState = {

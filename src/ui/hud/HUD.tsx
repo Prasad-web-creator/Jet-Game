@@ -145,6 +145,16 @@ const TargetTrackingReticle = memo(function TargetTrackingReticle() {
 
       <div className="hud-target-label-box">
         <span className="target-name">{lState.targetName ?? 'TARGET'}</span>
+        {lState.health !== undefined && lState.maxHealth !== undefined && (
+          <div style={{ width: '100%', height: '3px', background: 'rgba(255, 255, 255, 0.2)', marginTop: '2px', marginBottom: '2px' }}>
+            <div style={{
+              width: `${Math.max(0, (lState.health / lState.maxHealth) * 100)}%`,
+              height: '100%',
+              background: (lState.health / lState.maxHealth) > 0.5 ? '#00ff88' : (lState.health / lState.maxHealth) > 0.25 ? '#ffb400' : '#ff3737',
+              transition: 'width 0.1s ease-out'
+            }} />
+          </div>
+        )}
         {distanceM !== undefined && <span className="target-dist">{distanceM} M</span>}
         {isLocking && <span className="target-lock-pct">LOCK {lockPct}%</span>}
         {isLocked  && <span className="target-locked-text">LOCKED</span>}
