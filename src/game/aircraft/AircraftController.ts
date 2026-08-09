@@ -169,8 +169,8 @@ export class AircraftController implements GameSystem {
     console.log('[AircraftController] PLAYER DESTROYED!');
     globalEventBus.emit('PLAYER_DESTROYED', { position: new Vector3(this._aircraft.position.x, this._aircraft.position.y, this._aircraft.position.z) });
     
-    // Hide mesh or change to a wrecked state
-    this._mesh.dispose();
+    // Leave mesh visible so DamageEffectSystem continues to emit heavy smoke and fire
+    // as the dead plane falls to the ground.
   }
 
   // ─── GameSystem ───────────────────────────────────────────────────────────

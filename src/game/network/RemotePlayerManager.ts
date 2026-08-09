@@ -116,9 +116,8 @@ export class RemotePlayerManager implements GameSystem {
         remote.tracers.stop();
       }
 
-      // Hide mesh if destroyed
+      // Leave mesh visible as a wreck if destroyed
       const isDestroyed = typeof state.health === 'number' && state.health <= 0;
-      remote.rootMesh.isVisible = !isDestroyed;
       remote.label.isVisible    = !isDestroyed;
       if (isDestroyed && remote.tracers?.isStarted()) remote.tracers.stop();
 
