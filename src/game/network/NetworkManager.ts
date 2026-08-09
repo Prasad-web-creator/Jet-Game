@@ -83,22 +83,9 @@ export class NetworkManager implements GameSystem {
 
   initialize(_scene: Scene): void {
     const base = `matches/${this._matchId}`;
-    this._playersRef = rtdbRef(rtdb, `${base}/players`);
-    this._eventsRef  = rtdbRef(rtdb, `${base}/events`);
-    this._scoreRef   = rtdbRef(rtdb, `${base}/scoreboard`);
 
-    // Subscribe to remote players via RTDB (WebSocket channel)
-    this._unsubPlayers = onValue(this._playersRef, (snap) => {
-      const data = snap.val() as Record<string, PlayerNetState> | null;
-      if (!data) return;
-      for (const [uid, state] of Object.entries(data)) {
-        if (uid === this._localUid) continue; // skip self
-        this._interpolator.push(uid, state);
-        this._remoteStates.set(uid, state);
-      }
-    });
-
-    // Dual-channel Firestore live listener fallback (guarantees sync even if RTDB is blocked/unconfigured)
+    // 1. Dual-channel Firestore live listener fallback (guarantees sync even if RTDB is blocked/unconfigured)
+    // Initialize this FIRST so that any RTDB crash does not block Firestore sync.
     const livePlayersCol = collection(db, 'matches', this._matchId, 'live_players');
     this._unsubFirestoreLive = onSnapshot(livePlayersCol, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
@@ -116,30 +103,64 @@ export class NetworkManager implements GameSystem {
       console.warn('[NetworkManager] Firestore live sync notice:', err);
     });
 
-    // Subscribe to incoming hit events (only care about events targeting us)
-    this._unsubEvents = onChildAdded(this._eventsRef, (snap) => {
-      const evt = snap.val() as HitEvent;
-      if (!evt) return;
-      if (evt.targetUid !== this._localUid) return;
-      if (!evt.confirmed) return; // wait for confirmation
+    // 2. Setup RTDB Refs
+    this._playersRef = rtdbRef(rtdb, `${base}/players`);
+    this._eventsRef  = rtdbRef(rtdb, `${base}/events`);
+    this._scoreRef   = rtdbRef(rtdb, `${base}/scoreboard`);
 
-      this._aircraftController?.takeDamage({
-        amount:   evt.damage,
-        sourceId: evt.sourceUid,
-        type:     evt.type === 'missile_hit' ? 'missile' : 'bullet',
-        hitPosition: evt.pos,
+    // 3. Subscribe to remote players via RTDB (WebSocket channel)
+    try {
+      this._unsubPlayers = onValue(this._playersRef, (snap) => {
+        const data = snap.val() as Record<string, PlayerNetState> | null;
+        if (!data) return;
+        for (const [uid, state] of Object.entries(data)) {
+          if (uid === this._localUid) continue; // skip self
+          this._interpolator.push(uid, state);
+          this._remoteStates.set(uid, state);
+        }
+      }, (err) => {
+        console.warn('[NetworkManager] RTDB players sync blocked/failed:', err);
       });
-    });
+    } catch (e) {
+      console.warn('[NetworkManager] Failed to bind RTDB players:', e);
+    }
 
-    // Subscribe to live scoreboard
-    this._unsubScore = onValue(this._scoreRef, (snap) => {
-      const data = snap.val() as Record<string, LiveScore> | null;
-      if (!data) return;
-      this._scoreboard.clear();
-      for (const [uid, score] of Object.entries(data)) {
-        this._scoreboard.set(uid, score);
-      }
-    });
+    // 4. Subscribe to incoming hit events
+    try {
+      this._unsubEvents = onChildAdded(this._eventsRef, (snap) => {
+        const evt = snap.val() as HitEvent;
+        if (!evt) return;
+        if (evt.targetUid !== this._localUid) return;
+        if (!evt.confirmed) return; // wait for confirmation
+
+        this._aircraftController?.takeDamage({
+          amount:   evt.damage,
+          sourceId: evt.sourceUid,
+          type:     evt.type === 'missile_hit' ? 'missile' : 'bullet',
+          hitPosition: evt.pos,
+        });
+      }, (err) => {
+        console.warn('[NetworkManager] RTDB events sync blocked:', err);
+      });
+    } catch (e) {
+      console.warn('[NetworkManager] Failed to bind RTDB events:', e);
+    }
+
+    // 5. Subscribe to live scoreboard
+    try {
+      this._unsubScore = onValue(this._scoreRef, (snap) => {
+        const data = snap.val() as Record<string, LiveScore> | null;
+        if (!data) return;
+        this._scoreboard.clear();
+        for (const [uid, score] of Object.entries(data)) {
+          this._scoreboard.set(uid, score);
+        }
+      }, (err) => {
+        console.warn('[NetworkManager] RTDB scoreboard sync blocked:', err);
+      });
+    } catch (e) {
+      console.warn('[NetworkManager] Failed to bind RTDB scoreboard:', e);
+    }
 
     console.log(`[NetworkManager] Connected to match ${this._matchId} as ${this._callsign}`);
   }
