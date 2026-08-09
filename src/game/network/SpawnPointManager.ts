@@ -14,12 +14,12 @@ export interface SpawnPoint {
 }
 
 const PREDEFINED_SLOTS: Array<{ x: number; z: number }> = [
-  { x: -18, z: -280 }, // Slot 0: Runway Left Rear
-  { x:  18, z: -280 }, // Slot 1: Runway Right Rear
-  { x: -18, z: -240 }, // Slot 2: Runway Left Mid
-  { x:  18, z: -240 }, // Slot 3: Runway Right Mid
-  { x: -18, z: -200 }, // Slot 4: Runway Left Front
-  { x:  18, z: -200 }, // Slot 5: Runway Right Front
+  { x: 0,    z: 0 },
+  { x: 1000, z: 0 },
+  { x: 2000, z: 0 },
+  { x: 3000, z: 0 },
+  { x: 4000, z: 0 },
+  { x: 5000, z: 0 },
 ];
 
 export function getDeterministicSpawnPoint(slotIndex: number): SpawnPoint {
@@ -28,7 +28,7 @@ export function getDeterministicSpawnPoint(slotIndex: number): SpawnPoint {
   
   // Calculate extra row offset if slotIndex exceeds predefined array
   const extraRow = Math.floor(safeIndex / PREDEFINED_SLOTS.length);
-  const zOffset  = extraRow * -80; // 80m further back per tier
+  const zOffset  = extraRow * -1000; // 1000m further back per tier
 
   const x = baseSlot.x;
   const z = baseSlot.z + zOffset;
