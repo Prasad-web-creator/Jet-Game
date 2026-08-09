@@ -1,0 +1,598 @@
+/* ============================================================================
+   HUD — Heads-Up Display CSS
+   Military glass-panel aesthetic, pointer-events none throughout.
+   ============================================================================ */
+
+/* ── Base overlay ───────────────────────────────────────────────────── */
+.hud-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 10;
+  font-family: 'Orbitron', 'Courier New', monospace;
+  color: rgba(0, 255, 136, 0.85);
+  user-select: none;
+}
+
+/* ── Glass panels ───────────────────────────────────────────────────── */
+.hud-section {
+  position: absolute;
+  padding: 10px 14px;
+  background: rgba(0, 8, 18, 0.72);
+  border: 1px solid rgba(0, 255, 136, 0.45);
+  border-radius: 4px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.5), inset 0 0 6px rgba(0, 255, 136, 0.04);
+  min-width: 130px;
+}
+
+/* Panel positions */
+.hud-top-left     { top: 18px; left: 18px; }
+.hud-top-right    { top: 18px; right: 18px; text-align: right; }
+.hud-bottom-left  { bottom: 24px; left: 18px; }
+.hud-bottom-left  { bottom: 24px; left: 18px; }
+.hud-bottom-right { bottom: 24px; right: 18px; text-align: right; }
+.hud-bottom-right--touch {
+  bottom: auto;
+  top: 75px;
+  right: 18px;
+}
+
+.hud-bottom-center {
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ── FPS counter (top-center) ───────────────────────────────────────── */
+.hud-fps {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+}
+
+/* ── Center warning ─────────────────────────────────────────────────── */
+.hud-critical-warning {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 32px;
+  font-weight: 800;
+  color: rgba(255, 30, 30, 0.95);
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.6);
+  letter-spacing: 3px;
+  animation: hud-flash-fast 0.6s infinite alternate;
+}
+
+@keyframes hud-flash-fast {
+  from { opacity: 0.4; }
+  to { opacity: 1; text-shadow: 0 0 15px rgba(255, 0, 0, 1), 0 0 30px rgba(255, 0, 0, 0.8); }
+}
+
+/* ── Threat warning overlays ───────────────────────────────────────── */
+/* Positioned just below compass ribbon — NOT center screen */
+.hud-threat-warning {
+  position: absolute;
+  top: 55px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 16px;
+  font-size: 14px;
+  font-weight: 800;
+  border-radius: 3px;
+  letter-spacing: 2px;
+  backdrop-filter: blur(4px);
+  z-index: 15;
+  white-space: nowrap;
+}
+
+.hud-threat-warning--radar {
+  color: #ffaa00;
+  border: 1px solid rgba(255, 170, 0, 0.5);
+  background: rgba(40, 25, 0, 0.60);
+  text-shadow: 0 0 8px rgba(255, 170, 0, 0.6);
+}
+
+.hud-threat-warning--sam {
+  color: #ff3333;
+  border: 1px solid rgba(255, 51, 51, 0.7);
+  background: rgba(50, 0, 0, 0.70);
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+  animation: hud-flash-fast 0.5s infinite alternate;
+}
+
+.hud-threat-warning--inbound {
+  color: #ffffff;
+  border: 2px solid #ff0000;
+  background: rgba(180, 0, 0, 0.80);
+  text-shadow: 0 0 12px #ff0000;
+  animation: hud-flash-fast 0.25s infinite alternate;
+}
+
+.hud-fps {
+  text-shadow: 0 0 10px currentColor;
+  background: rgba(0, 8, 18, 0.72);
+  border: 1px solid rgba(0, 255, 136, 0.45);
+  border-radius: 4px;
+  padding: 6px 14px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Crosshair (viewport center) ────────────────────────────────────── */
+.hud-crosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.90;
+  filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.6));
+}
+
+/* ── Typography ─────────────────────────────────────────────────────── */
+.hud-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.hud-label {
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(0, 255, 136, 0.65);
+  text-shadow: 0 0 6px rgba(0, 255, 136, 0.3);
+}
+
+.hud-value {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: rgba(0, 255, 136, 0.95);
+  text-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
+}
+
+.hud-value--green { color: #00ff88; text-shadow: 0 0 10px rgba(0, 255, 136, 0.6); }
+.hud-value--dim   { color: rgba(0, 255, 136, 0.45); }
+
+.hud-value--large {
+  font-size: 18px;
+  font-weight: 900;
+  text-shadow: 0 0 12px rgba(0, 255, 136, 0.65);
+}
+
+.hud-unit {
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: rgba(0, 255, 136, 0.60);
+  margin-left: 2px;
+}
+
+/* ── Bottom-center instrument cluster ───────────────────────────────── */
+.hud-instrument {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 18px;
+}
+
+.hud-instrument-divider {
+  width: 1px;
+  height: 36px;
+  background: rgba(0, 255, 136, 0.2);
+  flex-shrink: 0;
+}
+
+/* ── Engine initializing spinner ────────────────────────────────────── */
+.engine-spinner {
+  width: 36px;
+  height: 36px;
+  border: 2px solid rgba(0, 255, 136, 0.15);
+  border-top-color: rgba(0, 255, 136, 0.85);
+  border-radius: 50%;
+  animation: hud-spin 0.9s linear infinite;
+}
+
+@keyframes hud-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Health bar ──────────────────────────────────────────────────────── */
+.hud-bar-track {
+  width: 100%;
+  height: 5px;
+  background: rgba(0, 255, 136, 0.18);
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 255, 136, 0.15);
+}
+
+.hud-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease, background 0.5s ease;
+}
+
+/* ── Throttle bar (vertical) ─────────────────────────────────────────── */
+.hud-throttle-track {
+  width: 6px;
+  height: 44px;
+  background: rgba(0, 255, 136, 0.10);
+  border: 1px solid rgba(0, 255, 136, 0.18);
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  margin: 4px auto 0;
+}
+
+.hud-throttle-fill {
+  width: 100%;
+  background: rgba(0, 255, 136, 0.75);
+  border-radius: 2px;
+  transition: height 0.12s ease;
+}
+
+.hud-throttle-fill--boost {
+  background: rgba(255, 150, 20, 0.90);
+  box-shadow: 0 0 6px rgba(255, 120, 0, 0.6);
+}
+
+/* ── Boost / brake status tags ───────────────────────────────────────── */
+.hud-status-tag {
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  padding: 2px 5px;
+  border-radius: 2px;
+  margin-top: 3px;
+  animation: hud-pulse 0.6s ease-in-out infinite alternate;
+}
+
+.hud-status-tag--boost {
+  color: rgba(255, 140, 0, 1.0);
+  border: 1px solid rgba(255, 140, 0, 0.6);
+  background: rgba(255, 100, 0, 0.12);
+}
+
+.hud-status-tag--brake {
+  color: rgba(255, 60, 60, 1.0);
+  border: 1px solid rgba(255, 60, 60, 0.6);
+  background: rgba(255, 40, 40, 0.12);
+}
+
+@keyframes hud-pulse {
+  from { opacity: 0.65; }
+  to   { opacity: 1.00; }
+}
+
+/* ── Speed value boost colour ────────────────────────────────────────── */
+.hud-value--boost {
+  color: rgba(255, 160, 20, 0.95) !important;
+  text-shadow: 0 0 12px rgba(255, 120, 0, 0.7);
+}
+
+/* ── Controls hint panel ─────────────────────────────────────────────── */
+.hud-controls {
+  min-width: 140px;
+}
+
+/* ── HUD Mission Tracker ─────────────────────────────────────────────── */
+.hud-mission-tracker {
+  border-top: 1px solid rgba(0, 255, 136, 0.2);
+  padding-top: 6px;
+  max-width: 220px;
+}
+
+.hud-mission-name {
+  font-size: 11px;
+  font-weight: 800;
+  color: rgba(0, 255, 200, 0.95);
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.hud-objectives-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hud-obj-item {
+  font-size: 10px;
+  color: rgba(220, 240, 230, 0.85);
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.hud-obj-item--completed {
+  color: rgba(0, 255, 136, 0.95);
+  text-decoration: line-through;
+  opacity: 0.75;
+}
+
+.hud-obj-check {
+  font-weight: bold;
+  color: rgba(0, 255, 136, 1.0);
+}
+
+.hud-obj-prog {
+  color: rgba(255, 220, 100, 0.95);
+  font-weight: bold;
+}
+
+/* ── Low Health Screen Red Vignette ──────────────────────────────────── */
+.hud-low-health-vignette {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 80px rgba(255, 0, 0, 0.6), inset 0 0 160px rgba(255, 0, 0, 0.4);
+  pointer-events: none;
+  animation: hud-vignette-pulse 0.8s infinite alternate ease-in-out;
+  z-index: 1;
+}
+
+@keyframes hud-vignette-pulse {
+  from { opacity: 0.4; }
+  to { opacity: 1.0; }
+}
+
+/* ── Compass Ribbon Tape (Top-Center) ────────────────────────────────── */
+.hud-compass-ribbon {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 320px;
+  height: 36px;
+  background: rgba(0, 8, 18, 0.72);
+  border: 1px solid rgba(0, 255, 136, 0.45);
+  border-radius: 4px;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+  z-index: 5;
+}
+
+.hud-compass-center-indicator {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #00ff88;
+  font-size: 10px;
+  line-height: 10px;
+  z-index: 2;
+  text-shadow: 0 0 5px #00ff88;
+}
+
+.hud-compass-tape {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hud-compass-tick {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 24px;
+  transition: transform 0.05s linear;
+}
+
+.hud-compass-mark {
+  font-size: 10px;
+  color: rgba(0, 255, 136, 0.7);
+  line-height: 8px;
+}
+
+.hud-compass-text {
+  font-size: 9px;
+  font-weight: bold;
+  color: rgba(0, 255, 136, 0.95);
+  letter-spacing: 0.5px;
+}
+
+/* ── Pitch Ladder Overlay (Center Viewport) ──────────────────────────── */
+.hud-pitch-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 240px;
+  height: 240px;
+  margin-top: -120px;
+  margin-left: -120px;
+  pointer-events: none;
+  z-index: 4;
+  transition: transform 0.05s linear;
+}
+
+.hud-pitch-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* ── 2D Screen-Space Target Tracking Reticle ──────────────────────────── */
+.hud-target-reticle {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 8;
+}
+
+.hud-target-box {
+  width: 44px;
+  height: 44px;
+  position: relative;
+  border: 1px dashed rgba(0, 255, 136, 0.5);
+  box-shadow: 0 0 8px rgba(0, 255, 136, 0.3);
+}
+
+.hud-target-reticle--locked .hud-target-box {
+  border: 2px solid rgba(255, 50, 50, 0.95);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+  animation: hud-target-pulse 0.4s infinite alternate;
+}
+
+@keyframes hud-target-pulse {
+  from { transform: scale(1.0); }
+  to { transform: scale(1.15); }
+}
+
+.target-corner {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: rgba(0, 255, 136, 0.9);
+  border-style: solid;
+}
+
+.hud-target-reticle--locked .target-corner {
+  border-color: rgba(255, 50, 50, 1.0);
+}
+
+.corner-tl { top: -2px; left: -2px; border-width: 2px 0 0 2px; }
+.corner-tr { top: -2px; right: -2px; border-width: 2px 2px 0 0; }
+.corner-bl { bottom: -2px; left: -2px; border-width: 0 0 2px 2px; }
+.corner-br { bottom: -2px; right: -2px; border-width: 0 2px 2px 0; }
+
+.hud-target-label-box {
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: bold;
+}
+
+.target-name {
+  color: #00ff88;
+  letter-spacing: 0.5px;
+}
+
+.target-dist {
+  color: #ffdd44;
+}
+
+.target-lock-pct {
+  color: #ff9900;
+}
+
+.target-locked-text {
+  color: #ff3333;
+  letter-spacing: 1px;
+}
+
+.hud-controls-title {
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: rgba(0, 255, 136, 0.55);
+  margin-bottom: 6px;
+  text-shadow: 0 0 6px rgba(0, 255, 136, 0.25);
+}
+
+.hud-controls-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 8px;
+  align-items: center;
+}
+
+.hud-key {
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: rgba(0, 255, 136, 0.85);
+  background: rgba(0, 255, 136, 0.12);
+  border: 1px solid rgba(0, 255, 136, 0.35);
+  padding: 1px 4px;
+  border-radius: 2px;
+  white-space: nowrap;
+  text-shadow: 0 0 6px rgba(0, 255, 136, 0.4);
+}
+
+.hud-act {
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: rgba(0, 255, 136, 0.62);
+  white-space: nowrap;
+}
+
+.hud-boost-text { color: rgba(255, 160, 20, 0.85); text-shadow: 0 0 6px rgba(255, 120, 0, 0.5); }
+
+/* ── Takeoff Overlay ─────────────────────────────────────────────────── */
+.hud-takeoff-overlay {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 8, 18, 0.6);
+  padding: 16px 24px;
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  border-radius: 6px;
+  backdrop-filter: blur(8px);
+  text-align: center;
+}
+
+.takeoff-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #00ff88;
+  letter-spacing: 4px;
+  text-shadow: 0 0 12px rgba(0, 255, 136, 0.8);
+}
+
+.takeoff-title--highlight {
+  color: #ff9900;
+  text-shadow: 0 0 12px rgba(255, 153, 0, 0.8);
+}
+
+.takeoff-sub {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff;
+  letter-spacing: 2px;
+}
+
+.takeoff-hint {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 1.5px;
+  margin-top: 4px;
+}

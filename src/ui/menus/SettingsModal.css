@@ -1,0 +1,133 @@
+.settings-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(4, 8, 20, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  backdrop-filter: blur(10px);
+  pointer-events: auto;
+  font-family: 'Orbitron', 'Courier New', monospace;
+  color: #fff;
+}
+
+.settings-container {
+  width: 650px;
+  max-width: 95vw;
+  background: rgba(10, 16, 30, 0.95);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 40px rgba(0, 255, 136, 0.2);
+  overflow: hidden;
+}
+
+.settings-header {
+  padding: 16px 24px;
+  background: rgba(0, 255, 136, 0.08);
+  border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.settings-header h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #00ff88;
+  letter-spacing: 2px;
+}
+
+.settings-close-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.settings-close-btn:hover {
+  color: #ff3333;
+}
+
+.settings-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+}
+
+.setting-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.setting-group h3 {
+  margin: 0;
+  font-size: 12px;
+  color: #00ff88;
+  letter-spacing: 1.5px;
+  border-bottom: 1px dashed rgba(0, 255, 136, 0.2);
+  padding-bottom: 6px;
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.setting-row input[type='range'] {
+  width: 200px;
+  accent-color: #00ff88;
+}
+
+.toggle-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #aaa;
+  padding: 6px 16px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.toggle-btn--active {
+  background: rgba(0, 255, 136, 0.2);
+  border-color: #00ff88;
+  color: #00ff88;
+}
+
+.segmented-control {
+  display: flex;
+  gap: 6px;
+}
+
+.segment-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #aaa;
+  padding: 6px 12px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.segment-btn--active {
+  background: rgba(0, 255, 136, 0.2);
+  border-color: #00ff88;
+  color: #00ff88;
+}

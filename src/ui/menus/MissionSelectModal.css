@@ -1,0 +1,229 @@
+.mission-select-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(4, 8, 20, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  backdrop-filter: blur(10px);
+  pointer-events: auto;
+  font-family: 'Orbitron', 'Courier New', monospace;
+  color: #fff;
+}
+
+.mission-select-container {
+  width: 900px;
+  max-width: 95vw;
+  height: 560px;
+  background: rgba(10, 16, 30, 0.95);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 40px rgba(0, 255, 136, 0.2);
+  overflow: hidden;
+}
+
+.mission-select-header {
+  padding: 16px 24px;
+  background: rgba(0, 255, 136, 0.08);
+  border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mission-select-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #00ff88;
+  letter-spacing: 2px;
+}
+
+.mission-close-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.mission-close-btn:hover {
+  color: #ff3333;
+}
+
+.mission-select-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.mission-list {
+  width: 360px;
+  border-right: 1px solid rgba(0, 255, 136, 0.15);
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mission-item {
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mission-item:hover:not(.mission-item--locked) {
+  border-color: #00ff88;
+  background: rgba(0, 255, 136, 0.08);
+}
+
+.mission-item--selected {
+  border-color: #00ff88 !important;
+  background: rgba(0, 255, 136, 0.12) !important;
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+}
+
+.mission-item--locked {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.mission-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.mission-item-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.mission-status-tag {
+  font-size: 9px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.mission-status-tag--available {
+  background: rgba(0, 255, 136, 0.2);
+  color: #00ff88;
+  border: 1px solid #00ff88;
+}
+
+.mission-status-tag--locked {
+  background: rgba(255, 255, 255, 0.1);
+  color: #aaa;
+}
+
+.mission-status-tag--completed {
+  background: rgba(0, 180, 255, 0.2);
+  color: #00b4ff;
+  border: 1px solid #00b4ff;
+}
+
+.mission-item-desc {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.4;
+}
+
+.mission-briefing-panel {
+  flex: 1;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+}
+
+.briefing-title {
+  font-size: 22px;
+  color: #00ff88;
+  margin: 0 0 12px 0;
+  letter-spacing: 1px;
+}
+
+.briefing-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.briefing-section {
+  margin-bottom: 20px;
+}
+
+.briefing-section h4 {
+  font-size: 12px;
+  color: rgba(0, 255, 136, 0.8);
+  letter-spacing: 1px;
+  margin: 0 0 8px 0;
+}
+
+.briefing-obj-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.briefing-obj-list li {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.obj-bullet {
+  color: #00ff88;
+  margin-right: 6px;
+}
+
+.briefing-reward-tag {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffaa00;
+}
+
+.mission-launch-btn {
+  margin-top: auto;
+  padding: 16px;
+  background: rgba(0, 255, 136, 0.2);
+  border: 2px solid #00ff88;
+  color: #00ff88;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: 'Orbitron', 'Courier New', monospace;
+  cursor: pointer;
+  border-radius: 4px;
+  letter-spacing: 2px;
+  transition: all 0.2s;
+}
+
+.mission-launch-btn:hover:not(:disabled) {
+  background: rgba(0, 255, 136, 0.4);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+  transform: scale(1.02);
+}
+
+.mission-launch-btn:disabled {
+  opacity: 0.4;
+  border-color: #666;
+  color: #888;
+  cursor: not-allowed;
+}

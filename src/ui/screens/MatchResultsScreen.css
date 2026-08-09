@@ -1,0 +1,169 @@
+/* MatchResultsScreen.css */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600&display=swap');
+
+.results-screen {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, #050d1a 0%, #020810 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Orbitron', monospace;
+  overflow: hidden;
+}
+
+.results-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.results-panel {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 680px;
+  background: rgba(4, 15, 30, 0.96);
+  border: 1px solid rgba(0,255,136,0.2);
+  box-shadow:
+    0 0 100px rgba(0,255,136,0.06),
+    0 0 40px rgba(0,100,60,0.1);
+  backdrop-filter: blur(24px);
+  overflow: hidden;
+}
+
+.results-header {
+  padding: 36px 40px 28px;
+  border-bottom: 1px solid rgba(0,255,136,0.12);
+  text-align: center;
+  position: relative;
+}
+.results-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #00ff88, transparent);
+}
+
+.results-winner-label {
+  font-size: 10px;
+  letter-spacing: 5px;
+  color: rgba(0,255,136,0.5);
+  margin-bottom: 8px;
+}
+.results-winner-name {
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: #00ff88;
+  text-shadow: 0 0 30px rgba(0,255,136,0.4);
+  animation: winnerPulse 2s ease-in-out infinite;
+}
+@keyframes winnerPulse {
+  0%,100% { text-shadow: 0 0 20px rgba(0,255,136,0.3); }
+  50%      { text-shadow: 0 0 40px rgba(0,255,136,0.7); }
+}
+
+.results-duration {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.3);
+  margin-top: 8px;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+/* ─── Scoreboard Table ───────────────────────────────────────────────────── */
+
+.results-table-wrap { padding: 0 0 8px; }
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.results-table th {
+  padding: 10px 16px;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: rgba(0,255,136,0.4);
+  text-align: left;
+  border-bottom: 1px solid rgba(0,255,136,0.08);
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+}
+.results-table th:not(:first-child) { text-align: center; }
+
+.results-table td {
+  padding: 14px 16px;
+  font-size: 13px;
+  color: #fff;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.results-table td:not(:first-child) { text-align: center; }
+.results-table td.kd-kills { color: #00ff88; font-weight: 700; }
+.results-table td.kd-deaths { color: #ff6060; }
+
+.results-row-1 { background: rgba(255,215,0,0.06); }
+.results-row-2 { background: rgba(180,180,200,0.04); }
+.results-row-3 { background: rgba(200,120,40,0.04); }
+
+.results-placement {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.3);
+}
+.results-placement.p1 { color: #ffd700; font-size: 18px; }
+.results-placement.p2 { color: #c0c0c0; font-size: 16px; }
+.results-placement.p3 { color: #cd7f32; font-size: 14px; }
+
+.results-callsign { font-weight: 700; letter-spacing: 2px; }
+.results-you { color: #00b4ff; }
+
+.results-xp-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  background: rgba(0,255,136,0.1);
+  border: 1px solid rgba(0,255,136,0.2);
+  color: #00ff88;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────────────── */
+
+.results-footer {
+  padding: 20px 40px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  border-top: 1px solid rgba(0,255,136,0.08);
+}
+
+.results-btn {
+  padding: 13px 28px;
+  font-family: 'Orbitron', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  cursor: pointer;
+  border: 1px solid;
+  transition: all 0.2s;
+}
+.results-btn-lobby {
+  background: rgba(0,255,136,0.1);
+  border-color: rgba(0,255,136,0.3);
+  color: #00ff88;
+}
+.results-btn-lobby:hover { background: rgba(0,255,136,0.2); }
+.results-btn-menu {
+  background: transparent;
+  border-color: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.5);
+}
+.results-btn-menu:hover { color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.3); }

@@ -1,0 +1,240 @@
+.hangar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(4, 8, 20, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  backdrop-filter: blur(10px);
+  pointer-events: auto;
+  font-family: 'Orbitron', 'Courier New', monospace;
+  color: #fff;
+}
+
+.hangar-container {
+  width: 920px;
+  max-width: 95vw;
+  height: 560px;
+  background: rgba(10, 16, 30, 0.95);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 40px rgba(0, 255, 136, 0.2);
+  overflow: hidden;
+}
+
+.hangar-header {
+  padding: 16px 24px;
+  background: rgba(0, 255, 136, 0.08);
+  border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hangar-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #00ff88;
+  letter-spacing: 2px;
+}
+
+.hangar-credits {
+  font-size: 14px;
+  color: #ffaa00;
+  font-weight: bold;
+}
+
+.hangar-close-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.hangar-close-btn:hover {
+  color: #ff3333;
+}
+
+.hangar-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.hangar-list {
+  width: 360px;
+  border-right: 1px solid rgba(0, 255, 136, 0.15);
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hangar-item {
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.hangar-item:hover {
+  border-color: #00ff88;
+  background: rgba(0, 255, 136, 0.08);
+}
+
+.hangar-item--active {
+  border-color: #00ff88 !important;
+  background: rgba(0, 255, 136, 0.12) !important;
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+}
+
+.hangar-item-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.hangar-item-name {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.hangar-tag {
+  font-size: 9px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.hangar-tag--equipped {
+  background: rgba(0, 255, 136, 0.2);
+  color: #00ff88;
+  border: 1px solid #00ff88;
+}
+
+.hangar-tag--locked {
+  background: rgba(255, 60, 60, 0.2);
+  color: #ff4444;
+  border: 1px solid #ff4444;
+}
+
+.hangar-item-role {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.hangar-details {
+  flex: 1;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.hangar-title {
+  font-size: 24px;
+  color: #00ff88;
+  margin: 0 0 4px 0;
+  letter-spacing: 1px;
+}
+
+.hangar-role-text {
+  font-size: 12px;
+  color: rgba(0, 255, 200, 0.8);
+  margin-bottom: 12px;
+}
+
+.hangar-desc {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.hangar-specs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.spec-row {
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  gap: 12px;
+}
+
+.spec-row span:first-child {
+  width: 130px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.spec-bar-track {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.spec-bar-fill {
+  height: 100%;
+  background: #00ff88;
+  border-radius: 4px;
+}
+
+.hangar-actions {
+  margin-top: auto;
+}
+
+.hangar-btn {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: 'Orbitron', 'Courier New', monospace;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 1.5px;
+  transition: all 0.2s;
+}
+
+.hangar-btn--equip {
+  background: rgba(0, 255, 136, 0.2);
+  border: 2px solid #00ff88;
+  color: #00ff88;
+}
+
+.hangar-btn--equip:hover:not(:disabled) {
+  background: rgba(0, 255, 136, 0.4);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+}
+
+.hangar-btn--unlock {
+  background: rgba(255, 170, 0, 0.2);
+  border: 2px solid #ffaa00;
+  color: #ffaa00;
+}
+
+.hangar-btn--unlock:hover:not(:disabled) {
+  background: rgba(255, 170, 0, 0.4);
+  box-shadow: 0 0 20px rgba(255, 170, 0, 0.6);
+}
+
+.hangar-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
