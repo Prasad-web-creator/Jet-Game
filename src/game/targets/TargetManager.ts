@@ -265,7 +265,9 @@ export class TargetManager implements GameSystem {
     this._hudTargetPayload.screenPos    = this.selectedTarget ? this._scratchScreenPos : undefined;
     this._hudTargetPayload.health       = this.selectedTarget?.health;
     this._hudTargetPayload.maxHealth    = this.selectedTarget?.maxHealth;
-    globalEventBus.emit('HUD_TARGET_UPDATE', this._hudTargetPayload);
+
+    // Clone the payload so React state hooks don't bail out on reference equality (Immutable update)
+    globalEventBus.emit('HUD_TARGET_UPDATE', { ...this._hudTargetPayload, screenPos: this._hudTargetPayload.screenPos ? { ...this._hudTargetPayload.screenPos } : undefined });
 
     state.lockState = {
       state:       this.lockState,

@@ -106,7 +106,20 @@ export class AircraftController implements GameSystem {
   private handleDamage(info: DamageInfo): void {
     if (this._aircraft.isDestroyed) return;
 
-    this._aircraft.health = Math.max(0, this._aircraft.health - info.amount);
+    console.log(`[HEALTH][BEFORE] playerId=${this._aircraft.id} health=${this._aircraft.health}`);
+    console.log(`[HEALTH][DAMAGE] playerId=${this._aircraft.id} damage=${info.amount}`);
+
+    // Create a new reference for React to detect the change (Immutable update)
+    this._aircraft = {
+      ...this._aircraft,
+      health: Math.max(0, this._aircraft.health - info.amount)
+    };
+
+    console.log(`[HEALTH][AFTER] playerId=${this._aircraft.id} health=${this._aircraft.health}`);
+
+    // Immediately push to React so the UI updates without waiting for the 10Hz timer
+    this._onStateUpdate?.({ playerAircraft: this._aircraft });
+
     const pos = new Vector3(
       this._aircraft.position.x,
       this._aircraft.position.y,
