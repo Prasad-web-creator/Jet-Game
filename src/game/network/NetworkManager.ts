@@ -58,6 +58,7 @@ export class NetworkManager implements GameSystem {
 
   // ── Timer ──────────────────────────────────────────────────────────────────
   private _broadcastTimer = 0;
+  private _lastFsBroadcastTime = 0;
 
   // ── Network refs ───────────────────────────────────────────────────────────
   private _playersRef:         DatabaseReference | null = null;
@@ -176,12 +177,17 @@ export class NetworkManager implements GameSystem {
       t:                Date.now(),
     };
 
+    // Fast 20 Hz WebSocket RTDB stream
     rtdbSet(rtdbRef(rtdb, `matches/${this._matchId}/players/${this._localUid}`), snap)
       .catch(() => {});
 
-    // Sync to Firestore live_players fallback channel
-    const fsDocRef = doc(db, 'matches', this._matchId, 'live_players', this._localUid);
-    setDoc(fsDocRef, snap).catch(() => {});
+    // Throttled 4 Hz (250ms) Firestore fallback stream (avoids Firestore rate-limiting)
+    const now = Date.now();
+    if (now - this._lastFsBroadcastTime >= 250) {
+      this._lastFsBroadcastTime = now;
+      const fsDocRef = doc(db, 'matches', this._matchId, 'live_players', this._localUid);
+      setDoc(fsDocRef, snap).catch(() => {});
+    }
   }
 
   // ─── Hit event publishing ────────────────────────────────────────────────────

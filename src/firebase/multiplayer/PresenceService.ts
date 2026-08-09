@@ -34,35 +34,47 @@ export class PresenceService {
     const connectedRef = rtdbRef(rtdb, '.info/connected');
     const userPresenceRef = rtdbRef(rtdb, `presence/matches/${this._matchId}/${this._uid}`);
 
-    this._unsubConnected = onValue(connectedRef, (snap) => {
-      const isConn = snap.val() === true;
-      if (isConn) {
-        if (this._reconnectTimer) {
-          clearTimeout(this._reconnectTimer);
-          this._reconnectTimer = null;
-        }
-        this._onStateChange?.('connected');
+    // Initial connected state
+    this._onStateChange?.('connected');
 
-        // Configure server-side onDisconnect trigger
-        onDisconnect(userPresenceRef).set({
-          connected: false,
-          lastSeen:  Date.now(),
-        }).catch(() => {});
+    try {
+      this._unsubConnected = onValue(connectedRef, (snap) => {
+        const isConn = snap.val() === true;
+        if (isConn) {
+          if (this._reconnectTimer) {
+            clearTimeout(this._reconnectTimer);
+            this._reconnectTimer = null;
+          }
+          this._onStateChange?.('connected');
 
-        // Set local connected state
-        rtdbSet(userPresenceRef, {
-          connected: true,
-          lastSeen:  Date.now(),
-        }).catch(() => {});
-      } else {
-        // Grace period: allow 3.5 seconds for initial WebSocket handshake before showing warning
-        if (!this._reconnectTimer) {
-          this._reconnectTimer = setTimeout(() => {
-            this._onStateChange?.('reconnecting');
-          }, 3500);
+          // Configure server-side onDisconnect trigger
+          onDisconnect(userPresenceRef).set({
+            connected: false,
+            lastSeen:  Date.now(),
+          }).catch(() => {});
+
+          // Set local connected state
+          rtdbSet(userPresenceRef, {
+            connected: true,
+            lastSeen:  Date.now(),
+          }).catch(() => {});
+        } else {
+          // If offline, flag reconnecting after grace period
+          if (!this._reconnectTimer && typeof navigator !== 'undefined' && !navigator.onLine) {
+            this._reconnectTimer = setTimeout(() => {
+              this._onStateChange?.('reconnecting');
+            }, 3500);
+          }
         }
-      }
-    });
+      }, () => {
+        // Fallback on error — keep connected if browser is online
+        if (typeof navigator !== 'undefined' && navigator.onLine) {
+          this._onStateChange?.('connected');
+        }
+      });
+    } catch (_err) {
+      this._onStateChange?.('connected');
+    }
   }
 
   dispose(): void {
