@@ -106,8 +106,6 @@ export class AircraftController implements GameSystem {
   private handleDamage(info: DamageInfo): void {
     if (this._aircraft.isDestroyed) return;
 
-    info.amount = 2; // Override all incoming damage to 2 points
-
     this._aircraft.health = Math.max(0, this._aircraft.health - info.amount);
     const pos = new Vector3(
       this._aircraft.position.x,
